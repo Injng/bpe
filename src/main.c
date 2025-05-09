@@ -1,6 +1,7 @@
 #define STB_DS_IMPLEMENTATION
 
 #include "../lib/stb_ds.h"
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -63,6 +64,29 @@ void bpe_get_freq(struct freq **freqs, char *text) {
     }
 }
 
+/**
+ * bpe_compare_freqs() - A comparator function for sorting frequencies.
+ * @p1 - A pointer to the first frequency.
+ * @p2 - A pointer to the second frequency.
+ *
+ * This function is meant to be used with qsort, to sort the frequencies with the most frequent pair first.
+ */
+int bpe_compare_freqs(const void *p1, const void *p2) {
+    struct freq *f1 = (struct freq *) p1;
+    struct freq *f2 = (struct freq *) p2;
+    return f2->value - f1->value;
+}
+
+/**
+ * bpe_sort_freqs() - A function to sort a frequency hash map.
+ * @freqs - The frequency hash map.
+ *
+ * This function uses qsort to sort the frequency hash map, putting the most frequent pair first.
+ */
+void bpe_sort_freqs(struct freq **freqs) {
+    qsort(*freqs, hmlen(*freqs), sizeof(struct freq *), bpe_compare_freqs);
+}
+
 int main(void) {
     // Robert Frost, The Road Not Taken
     char *text = "Two roads diverged in a yellow wood, \
@@ -91,6 +115,9 @@ int main(void) {
 
     // get the frequencies of each pair of characters into the hash map
     bpe_get_freq(&freqs, text);
+
+    // sort the hash map
+    bpe_sort_freqs(&freqs);
 
     // iterate through the hash map and print values
     for (int i = 0; i < hmlen(freqs); i++) {
