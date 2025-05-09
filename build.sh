@@ -1,3 +1,3 @@
 #!/bin/bash
 
-gcc -g -Wall -Wextra src/main.c -o main.o
+gcc -g -Wall -Wextra src/main.c src/freq.c -o main.o
