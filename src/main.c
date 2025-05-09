@@ -31,6 +31,38 @@ struct freq {
     int value;
 };
 
+/**
+ * bpe_get_freq() - Extracts the frequencies of character pairs in a text to a hash map implementation.
+ * @freqs - The pointer to the hash map.
+ * @text - The text to extract frequencies from.
+ *
+ * This function takes in a reference to a hash map implementation, freqs, and a text, text.
+ * It will then iterate through all pairs in the text, updating the frequency in the hash map accordingly.
+ */
+void bpe_get_freq(struct freq **freqs, char *text) {
+    // get the length of the text
+    int length = strlen(text);
+
+    // extract all pairs of characters from the text
+    for (int i = 0; i < length - 1; i++) {
+        // define the pair of characters to be used as the key
+        struct pair p = {
+            .first = text[i],
+            .second = text[i+1]
+        };
+
+        // check if the key exists in the hash map
+        if (hmgeti(*freqs, p) >= 0) {
+            // if so, get and update the frequency
+            int value = hmget(*freqs, p);
+            hmput(*freqs, p, ++value);
+        } else {
+            // otherwise, create a new key-value pair
+            hmput(*freqs, p, 1);
+        }
+    }
+}
+
 int main(void) {
     // Robert Frost, The Road Not Taken
     char *text = "Two roads diverged in a yellow wood, \
@@ -54,30 +86,11 @@ int main(void) {
     I took the one less traveled by, \
     And that has made all the difference.";
 
-    // get the length of the text
-    int length = strlen(text);
-
     // define the hash map implementation
     struct freq *freqs = NULL;
 
-    // extract all pairs of characters from the text
-    for (int i = 0; i < length - 1; i++) {
-        // define the pair of characters to be used as the key
-        struct pair p = {
-            .first = text[i],
-            .second = text[i+1]
-        };
-
-        // check if the key exists in the hash map
-        if (hmgeti(freqs, p) >= 0) {
-            // if so, get and update the frequency
-            int value = hmget(freqs, p);
-            hmput(freqs, p, ++value);
-        } else {
-            // otherwise, create a new key-value pair
-            hmput(freqs, p, 1);
-        }
-    }
+    // get the frequencies of each pair of characters into the hash map
+    bpe_get_freq(&freqs, text);
 
     // iterate through the hash map and print values
     for (int i = 0; i < hmlen(freqs); i++) {
