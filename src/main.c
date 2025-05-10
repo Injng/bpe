@@ -20,7 +20,7 @@ int main(void) {
     // iterate through the hash map and print values
     for (int i = 0; i < hmlen(freqs); i++) {
         struct pair key = freqs[i].key;
-        printf("%d, %d: %d\n", key.first, key.second, freqs[i].value);
+        printf("%u, %u: %d\n", key.first, key.second, freqs[i].value);
     }
 
     return 0;

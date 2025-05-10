@@ -1,8 +1,6 @@
 #ifndef FREQ_H
 #define FREQ_H
 
-#include <stdint.h>
-
 /**
  * struct pair - Defines a pair of characters representing a single unit in
  * byte pair encoding.
@@ -14,8 +12,8 @@
  * key-value pair for a hash map implementation.
  */
 struct pair {
-    int32_t first;
-    int32_t second;
+    unsigned int first;
+    unsigned int second;
 };
 
 /**

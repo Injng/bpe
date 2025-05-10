@@ -23,8 +23,8 @@ void bpe_get_freqs(struct freq **freqs, char *text) {
     for (int i = 0; i < length - 1; i++) {
         // define the pair of characters to be used as the key
         struct pair p = {
-            .first = (int32_t) text[i],
-            .second = (int32_t) text[i+1]
+            .first = (unsigned int) text[i],
+            .second = (unsigned int) text[i+1]
         };
 
         // add the pair to the frequency hash map
