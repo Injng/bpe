@@ -3,6 +3,18 @@
 #include <stdlib.h>
 #include <string.h>
 
+void bpe_add_freq(struct freq **freqs, struct pair p) {
+    // check if the key exists in the hash map
+    if (hmgeti(*freqs, p) >= 0) {
+        // if so, get and update the frequency
+        int value = hmget(*freqs, p);
+        hmput(*freqs, p, ++value);
+    } else {
+        // otherwise, create a new key-value pair
+        hmput(*freqs, p, 1);
+    }
+}
+
 void bpe_get_freqs(struct freq **freqs, char *text) {
     // get the length of the text
     int length = strlen(text);
@@ -15,15 +27,8 @@ void bpe_get_freqs(struct freq **freqs, char *text) {
             .second = (int32_t) text[i+1]
         };
 
-        // check if the key exists in the hash map
-        if (hmgeti(*freqs, p) >= 0) {
-            // if so, get and update the frequency
-            int value = hmget(*freqs, p);
-            hmput(*freqs, p, ++value);
-        } else {
-            // otherwise, create a new key-value pair
-            hmput(*freqs, p, 1);
-        }
+        // add the pair to the frequency hash map
+        bpe_add_freq(freqs, p);
     }
 }
 

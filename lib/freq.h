@@ -36,6 +36,19 @@ struct freq {
 };
 
 /**
+ * bpe_add_freq() - Adds the frequency of a character pair to the hash map.
+ * @freqs - The pointer to the hash map.
+ * @p - The character pair to add.
+ *
+ * This function takes in a reference to a hash map implementation, freqs, and
+ * a character pair, p. It will then attempt to retrieve the current frequency
+ * of that character pair from freqs. If it exists, it will increment the
+ * frequency by 1; if it doesn't exist, the pair will be added to the hash
+ * map and the frequency will be set to 1.
+ */
+void bpe_add_freq(struct freq **freqs, struct pair p);
+
+/**
  * bpe_get_freq() - Extracts the frequencies of character pairs in a text to a
  * hash map implementation.
  * @freqs - The pointer to the hash map.
