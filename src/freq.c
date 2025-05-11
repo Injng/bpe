@@ -23,13 +23,35 @@ void bpe_get_freqs(struct freq **freqs, char *text) {
     for (int i = 0; i < length - 1; i++) {
         // define the pair of characters to be used as the key
         struct pair p = {
-            .first = (unsigned int) text[i],
-            .second = (unsigned int) text[i+1]
+            .first = (unsigned int) (unsigned char) text[i],
+            .second = (unsigned int) (unsigned char) text[i+1]
         };
 
         // add the pair to the frequency hash map
         bpe_add_freq(freqs, p);
     }
+}
+
+struct freq *bpe_get_freqs_from_arr(struct freq **freqs, unsigned int *text) {
+    // free hash map
+    hmfree(*freqs);
+
+    // create new frequency hash map
+    struct freq *new_freqs = NULL;
+
+    // extract all pairs of characters from the text
+    for (int i = 0; i < arrlen(text) - 1; i++) {
+        // define the pair of characters to be used as the key
+        struct pair p = {
+            .first = text[i],
+            .second = text[i+1]
+        };
+
+        // add the pair to the frequency hash map
+        bpe_add_freq(&new_freqs, p);
+    }
+
+    return new_freqs;
 }
 
 int bpe_compare_freqs(const void *p1, const void *p2) {

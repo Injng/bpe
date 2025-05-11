@@ -57,6 +57,7 @@ void bpe_add_freq(struct freq **freqs, struct pair p);
  * the frequency in the hash map accordingly.
  */
 void bpe_get_freqs(struct freq **freqs, char *text);
+struct freq *bpe_get_freqs_from_arr(struct freq **freqs, unsigned int *text);
 
 /**
  * bpe_compare_freqs() - A comparator function for sorting frequencies.
