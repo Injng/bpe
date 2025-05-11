@@ -1,12 +1,12 @@
 /* stb_ds.h - v0.67 - public domain data structures - Sean Barrett 2019
 
    This is a single-header-file library that provides easy-to-use
-   dynamic arrays and hash tables for C (also works in C++).
+   dynamic arrays and hash tables for C.
 
    For a gentle introduction:
       http://nothings.org/stb_ds
 
-   To use this library, do this in *one* C or C++ file:
+   To use this library, do this in *one* C file:
       #define STB_DS_IMPLEMENTATION
       #include "stb_ds.h"
 
@@ -54,10 +54,6 @@ COMPILE-TIME OPTIONS
   #define STBDS_UNIT_TESTS
 
      Defines a function stbds_unit_tests() that checks the functioning of the data structures.
-
-  Note that on older versions of gcc (e.g. 5.x.x) you may need to build with '-std=c++0x'
-     (or equivalentally '-std=c++11') when using anonymous structures as seen on the web
-     page or in STBDS_UNIT_TESTS.
 
 LICENSE
 
@@ -337,8 +333,7 @@ NOTES - HASH MAP
   * For compilers other than GCC and clang (e.g. Visual Studio), for hmput/hmget/hmdel
     and variants, the key must be an lvalue (so the macro can take the address of it).
     Extensions are used that eliminate this requirement if you're using C99 and later
-    in GCC or clang, or if you're using C++ in GCC. But note that this can make your
-    code less portable.
+    in GCC or clang. But note that this can make your code less portable.
 
   * To test for presence of a key in a hashmap, just do 'hmgeti(foo,key) >= 0'.
 
@@ -467,10 +462,6 @@ CREDITS
 #define STBDS_NOTUSED(v)  (void)sizeof(v)
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 // for security against attackers, seed the library with a random number, at least time() but stronger is better
 extern void stbds_rand_seed(size_t seed);
 
@@ -501,21 +492,12 @@ extern void * stbds_hmput_key(void *a, size_t elemsize, void *key, size_t keysiz
 extern void * stbds_hmdel_key(void *a, size_t elemsize, void *key, size_t keysize, size_t keyoffset, int mode);
 extern void * stbds_shmode_func(size_t elemsize, int mode);
 
-#ifdef __cplusplus
-}
-#endif
-
 #if defined(__GNUC__) || defined(__clang__)
 #define STBDS_HAS_TYPEOF
-#ifdef __cplusplus
-//#define STBDS_HAS_LITERAL_ARRAY  // this is currently broken for clang
-#endif
 #endif
 
-#if !defined(__cplusplus)
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 #define STBDS_HAS_LITERAL_ARRAY
-#endif
 #endif
 
 // this macro takes the address of the argument, but on gcc/clang can accept rvalues
@@ -687,31 +669,6 @@ enum
    STBDS_SH_ARENA
 };
 
-#ifdef __cplusplus
-// in C we use implicit assignment from these void*-returning functions to T*.
-// in C++ these templates make the same code work
-template<class T> static T * stbds_arrgrowf_wrapper(T *a, size_t elemsize, size_t addlen, size_t min_cap) {
-  return (T*)stbds_arrgrowf((void *)a, elemsize, addlen, min_cap);
-}
-template<class T> static T * stbds_hmget_key_wrapper(T *a, size_t elemsize, void *key, size_t keysize, int mode) {
-  return (T*)stbds_hmget_key((void*)a, elemsize, key, keysize, mode);
-}
-template<class T> static T * stbds_hmget_key_ts_wrapper(T *a, size_t elemsize, void *key, size_t keysize, ptrdiff_t *temp, int mode) {
-  return (T*)stbds_hmget_key_ts((void*)a, elemsize, key, keysize, temp, mode);
-}
-template<class T> static T * stbds_hmput_default_wrapper(T *a, size_t elemsize) {
-  return (T*)stbds_hmput_default((void *)a, elemsize);
-}
-template<class T> static T * stbds_hmput_key_wrapper(T *a, size_t elemsize, void *key, size_t keysize, int mode) {
-  return (T*)stbds_hmput_key((void*)a, elemsize, key, keysize, mode);
-}
-template<class T> static T * stbds_hmdel_key_wrapper(T *a, size_t elemsize, void *key, size_t keysize, size_t keyoffset, int mode){
-  return (T*)stbds_hmdel_key((void*)a, elemsize, key, keysize, keyoffset, mode);
-}
-template<class T> static T * stbds_shmode_func_wrapper(T *, size_t elemsize, int mode) {
-  return (T*)stbds_shmode_func(elemsize, mode);
-}
-#else
 #define stbds_arrgrowf_wrapper            stbds_arrgrowf
 #define stbds_hmget_key_wrapper           stbds_hmget_key
 #define stbds_hmget_key_ts_wrapper        stbds_hmget_key_ts
@@ -719,7 +676,6 @@ template<class T> static T * stbds_shmode_func_wrapper(T *, size_t elemsize, int
 #define stbds_hmput_key_wrapper           stbds_hmput_key
 #define stbds_hmdel_key_wrapper           stbds_hmdel_key
 #define stbds_shmode_func_wrapper(t,e,m)  stbds_shmode_func(e,m)
-#endif
 
 #endif // INCLUDE_STB_DS_H
 
@@ -1647,10 +1603,6 @@ char *strkey(int n)
 
 void stbds_unit_tests(void)
 {
-#if defined(_MSC_VER) && _MSC_VER <= 1200 && defined(__cplusplus)
-  // VC6 C++ doesn't like the template<> trick on unnamed structures, so do nothing!
-  STBDS_ASSERT(0);
-#else
   const int testsize = 100000;
   const int testsize2 = testsize/20;
   int *arr=NULL;
@@ -1721,18 +1673,6 @@ void stbds_unit_tests(void)
   for (i=0; i < testsize; i+=2)
     hmput(intmap, i, i*3);
   hmfree(intmap);
-
-  #if defined(__clang__) || defined(__GNUC__)
-  #ifndef __cplusplus
-  intmap = NULL;
-  hmput(intmap, 15, 7);
-  hmput(intmap, 11, 3);
-  hmput(intmap,  9, 5);
-  STBDS_ASSERT(hmget(intmap, 9) == 5);
-  STBDS_ASSERT(hmget(intmap, 11) == 3);
-  STBDS_ASSERT(hmget(intmap, 15) == 7);
-  #endif
-  #endif
 
   for (i=0; i < testsize; ++i)
     stralloc(&sa, strkey(i));
@@ -1847,7 +1787,6 @@ void stbds_unit_tests(void)
     else       STBDS_ASSERT(hmgets(map3, s.key).d == i*5);
     //STBDS_ASSERT(hmgetp(map3, t.key) == 0);
   }
-#endif
 }
 #endif
 
