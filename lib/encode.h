@@ -16,8 +16,8 @@
  * implementation.
  */
 struct encoding {
-    struct pair key;
-    unsigned int value;
+  struct pair key;
+  unsigned int value;
 };
 
 /**
@@ -34,17 +34,32 @@ struct encoding {
  * in the encoded text.
  */
 struct encoded {
-    unsigned int *text;
-    struct encoding *encodings;
-    struct freq *freqs;
+  unsigned int *text;
+  struct encoding *encodings;
+  struct freq *freqs;
 };
 
+/**
+ * bpe_text_to_arr() - Turns a character string into a unsigned int array.
+ * @text - The pointer to the character string.
+ *
+ * This function takes in a chraacter array/string, text, and transforms it into
+ * a dynamic array with type unsigned int. Each unsigned int corresponds to the
+ * character's ASCII code, which means that an unencoded text would have all
+ * values under 256.
+ */
 unsigned int *bpe_text_to_arr(char *text);
 
-unsigned long bpe_get_size(unsigned int *text, struct encoding *encodings);
-
-unsigned int bpe_assign_encoding(struct encoding **encodings, struct pair p);
-
+/**
+ * bpe_encode() - Encodes one iteration of a byte pair string, if it is smaller.
+ * @encoded - The struct containing the text, its encodings, and frequencies.
+ *
+ * This function gets the most frequent byte pair and assigns an encoding to it.
+ * It will then proceed to attempt to replace all matching pairs with this
+ * encoding, thereby compressing it. It will compare the new size with its
+ * previous size, returning 0 and updating the encodings, text, and
+ * frequencies if it is smaller, and returning -1 and exiting if it is larger.
+ */
 int bpe_encode(struct encoded *encoded);
 
 #endif
