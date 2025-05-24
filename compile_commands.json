@@ -1,0 +1,50 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-fsanitize=address",
+      "-o",
+      "main.o",
+      "src/main.c"
+    ],
+    "directory": "/home/lnjng/Projects/dev/bpe",
+    "file": "/home/lnjng/Projects/dev/bpe/src/main.c",
+    "output": "/home/lnjng/Projects/dev/bpe/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-fsanitize=address",
+      "-o",
+      "main.o",
+      "src/freq.c"
+    ],
+    "directory": "/home/lnjng/Projects/dev/bpe",
+    "file": "/home/lnjng/Projects/dev/bpe/src/freq.c",
+    "output": "/home/lnjng/Projects/dev/bpe/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-fsanitize=address",
+      "-o",
+      "main.o",
+      "src/encode.c"
+    ],
+    "directory": "/home/lnjng/Projects/dev/bpe",
+    "file": "/home/lnjng/Projects/dev/bpe/src/encode.c",
+    "output": "/home/lnjng/Projects/dev/bpe/main.o"
+  }
+]
