@@ -12,8 +12,8 @@
  * key-value pair for a hash map implementation.
  */
 struct pair {
-    unsigned int first;
-    unsigned int second;
+  unsigned int first;
+  unsigned int second;
 };
 
 /**
@@ -29,8 +29,8 @@ struct pair {
  * implementation.
  */
 struct freq {
-    struct pair key;
-    int value;
+  struct pair key;
+  int value;
 };
 
 /**
@@ -69,13 +69,13 @@ struct freq *bpe_get_freqs_from_arr(struct freq **freqs, unsigned int *text);
  */
 int bpe_compare_freqs(const void *p1, const void *p2);
 
- /**
-  * bpe_sort_freqs() - A function to sort a frequency hash map.
-  * @freqs - The frequency hash map.
-  *
-  * This function uses qsort to sort the frequency hash map, putting the most
-  * frequent pair first.
-  */
+/**
+ * bpe_sort_freqs() - A function to sort a frequency hash map.
+ * @freqs - The frequency hash map.
+ *
+ * This function uses qsort to sort the frequency hash map, putting the most
+ * frequent pair first.
+ */
 void bpe_sort_freqs(struct freq **freqs);
 
 #endif
