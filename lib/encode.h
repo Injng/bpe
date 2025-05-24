@@ -41,8 +41,10 @@ struct encoded {
 
 unsigned int *bpe_text_to_arr(char *text);
 
+unsigned long bpe_get_size(unsigned int *text, struct encoding *encodings);
+
 unsigned int bpe_assign_encoding(struct encoding **encodings, struct pair p);
 
-void bpe_encode(struct encoded *encoded);
+int bpe_encode(struct encoded *encoded);
 
 #endif
